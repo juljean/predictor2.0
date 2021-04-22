@@ -1,0 +1,23 @@
+.container {
+  width: 100%;
+  max-width: 1024px;
+  padding: 20px 20px;
+  margin: 0 auto;
+}
+
+.menu-line{
+    display: flex;
+    justify-content: space-between;
+}
+
+.page-header {
+    margin-top: 0;
+}
+
+.custom_table{
+    padding: 15px 0px 0px 38px;
+}
+
+.calendars{
+    padding: 15px 0px 0px 38px;
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+      <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+      <title>Data Bitcoin</title>
+  </head>
+
+  <body>
+  <div class="container">
+    <div class = "menu-line">
+      <form method = "post">
+        {% csrf_token %}
+        <input type="text" size="8" name = "start_dat" required placeholder="Start Date">
+        {% csrf_token %}
+        <input type="text" size="8" name = "end_dat" placeholder="End Date">
+        <div class="btn-group">
+            <button class="btn btn-secondary btn-sm dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Coin
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">BTC</a></li>
+              <li><a class="dropdown-item" href="#">ETH</a></li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-secondary btn-sm dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Granularity
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">week</a></li>
+            <li><a class="dropdown-item" href="#">month</a></li>
+          </ul>
+        </div>
+
+        <div class="btn-group justify-content-md-end">
+            <button onclick="location.href='{% url 'script' %}'" class="btn btn-dark" type="submit">Build</button>
+        </div>
+      </form>
+    </div>
+
+
+        <! -- PLot by plotly -->
+      {% include 'genie/inc/_plot_path.html' %}
+
+      <div>
+          <! -- Black Table -->
+          <div class="custom_table">
+            <table class="table table-dark table-striped" style="width: 500px" >
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for item in data_val %}
+                <tr>
+                     <td>{{item.date}}</td>
+                    <td>{{item.close}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+          </div>
+      </div>
+  </div>
+  </body>
+
+</html>
