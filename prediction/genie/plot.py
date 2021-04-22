@@ -5,7 +5,7 @@ from .models import CryptBD
 
 class UserInput:
     state = True # the input-field doesn`t blocked
-    def __init__(self, st_date, end_date, coin_inp, intervals = None, investments = None):
+    def __init__(self, st_date, end_date, coin_inp = "BTC", intervals = None, investments = None):
         self.startDate = st_date
         self.endDate = end_date
         self.coin = coin_inp
@@ -39,10 +39,17 @@ class Data:
 
 
 class Plot:
+    def __init__(self, raw_start = "3/3/2018" ,raw_end = "3/3/2020"):
+        self.raw_start = raw_start
+        self.raw_end = raw_end
     def draw(self):
         #df = pd.read_csv("C:\\Users\\Jul\\Desktop\\BTC__USD.csv")
         data_inst = Data()
-        fig = px.line(data_inst.df.iloc[::-1], x='date', y='close', color_discrete_sequence=['#14213d']) #x:date; y:price
+        df = data_inst.df[::-1]
+        start_ind = data_inst.df.index[df['date'] == self.raw_start].tolist()[0]
+        end_ind = data_inst.df.index[df['date'] == self.raw_end].tolist()[0]
+        print(start_ind, end_ind)
+        fig = px.line(df.iloc[start_ind:end_ind], x='date', y='close', color_discrete_sequence=['#14213d']) #x:date; y:price
         fig.update_layout(
             font_family="Times New Roman",
             font_color = '#14213d',
