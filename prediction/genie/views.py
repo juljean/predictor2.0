@@ -17,6 +17,7 @@ def index(request):
 def external(request):
     start_date = request.POST.get("start_dat")
     end_date = request.POST.get("end_dat")
+    print(start_date)
     plot_inst = Plot(start_date, end_date)
     plot_inst.draw()
     return render(request, 'genie/index.html', data())
