@@ -36,7 +36,11 @@ class Data:
         self.df = pd.DataFrame(list(CryptBD.objects.values('date', 'close')))
         for i in range(len(self.df['date'])):
             old_val = self.df._get_value(i, 'date')
-            new_val = old_val.replace("/", "-")
+            dash1 = old_val.find("/")
+            dash2 = old_val.find("/", dash1+1)
+            month = old_val[:dash1]
+            day = old_val[int(dash1)+1: dash2]
+            new_val = old_val[-4:] + "-" + month + "-" + day
             self.df['date'] = self.df['date'].replace([old_val], new_val)
         #print(self.df)
 
@@ -45,21 +49,20 @@ class Data:
 
 
 class Plot:
-    def __init__(self, raw_start = "11-3-2014" ,raw_end = "3-3-2020"):
+    def __init__(self, raw_start ,raw_end): #%y%m%d
         self.raw_start = raw_start
         self.raw_end = raw_end
     def draw(self):
         #df = pd.read_csv("C:\\Users\\Jul\\Desktop\\BTC__USD.csv")
         data_inst = Data()
         df = data_inst.df[::-1]
-        #print(df)
         start_ind = data_inst.df.index[df['date'] == self.raw_start].tolist()[0]
         end_ind = data_inst.df.index[df['date'] == self.raw_end].tolist()[0]
         print(start_ind, end_ind)
         fig = px.line(df.iloc[start_ind:end_ind], x='date', y='close', color_discrete_sequence=['#14213d']) #x:date; y:price
         fig.update_layout(
-            font_family="Times New Roman",
-            font_color = '#14213d',
+            font_family="Droid Sans",
+            #font_color = '#14213d',
             xaxis_title="Date",
             yaxis_title="Price",
             paper_bgcolor = "white",
@@ -67,6 +70,7 @@ class Plot:
             plot_bgcolor = '#FFE5D9',
         )
         #fig.show()
+        fig.update_xaxes(title_font_family= "Droid Sans")
         fig.write_html("genie\\templates\\genie\\inc\\_plot_path.html",
                 full_html=False,
                 include_plotlyjs='cdn')

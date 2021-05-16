@@ -61,3 +61,7 @@ body{
 .calendars{
     padding: 15px 0px 0px 38px;
 }
+
+.prediction-container{
+    display: flex;
+}

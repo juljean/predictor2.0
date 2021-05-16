@@ -1,8 +1,10 @@
 import os
+import sys
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from numpy import array
+import plotly.express as px
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
@@ -15,7 +17,7 @@ RANDOM_SEED = 42
 
 np.random.seed(RANDOM_SEED)
 
-df = pd.read_csv("C:\\Users\\Jul\\Desktop\\python3.72\\neural\\ETHUSD.csv", parse_dates=['Date'])
+df = pd.read_csv("ETHUSD.csv", parse_dates=['Date'])
 
 scaler = MinMaxScaler()
 close_price = df.Close.values.reshape(-1, 1)
@@ -54,6 +56,7 @@ x_train, y_train, x_test, y_test = preprocess(scaled_close, SEQ_LEN, train_split
 DROPOUT = 0.2
 WINDOW_SIZE = SEQ_LEN - 1
 
+#start here
 # model = keras.Sequential()
 #
 # model.add(Bidirectional(LSTM(WINDOW_SIZE, return_sequences=True),
@@ -80,15 +83,16 @@ WINDOW_SIZE = SEQ_LEN - 1
 #     x_train,
 #     y_train,
 #     epochs=50,
-#     batch_size=64,
+#     batch_size=BATCH_SIZE,
 #     shuffle=False,
 #     validation_split=0.1
 # )
 #
-# model.save("forecast_model")
+# model.save("ethForecastModel")
+#end here
 
 # It can be used to reconstruct the model identically.
-reconstructed_model = keras.models.load_model("forecast_model")
+reconstructed_model = keras.models.load_model("ethForecastModel")
 
 
 results = reconstructed_model.evaluate(x_test, y_test, batch_size = 128)
@@ -125,12 +129,12 @@ while (i < 30):
     if (len(temp_input) > 99):
         # print(temp_input)
         x_input = np.array(temp_input[1:])
-        print("{} day input {}".format(i, x_input))
+        #print("{} day input {}".format(i, x_input))
         x_input = x_input.reshape(1, -1)
         x_input = x_input.reshape((1, n_steps, 1))
         # print(x_input)
         yhat = reconstructed_model.predict(x_input, verbose=0)
-        print("{} day output {}".format(i, yhat))
+        #print("{} day output {}".format(i, yhat))
         temp_input.extend(yhat[0].tolist())
         temp_input = temp_input[1:]
         # print(temp_input)
@@ -139,9 +143,9 @@ while (i < 30):
     else:
         x_input = x_input.reshape((1, n_steps, 1))
         yhat = reconstructed_model.predict(x_input, verbose=0)
-        print(yhat[0])
+        #print(yhat[0])
         temp_input.extend(yhat[0].tolist())
-        print(len(temp_input))
+        #print(len(temp_input))
         lst_output.extend(yhat.tolist())
         i = i + 1
 
@@ -154,6 +158,18 @@ while (i < 30):
 
 df3=scaled_close.tolist()
 df3.extend(lst_output)
+print(len(df3))
 df3=scaler.inverse_transform(df3).tolist()
-plt.plot(df3)
-plt.show()
+y = []
+for i in df3:
+    y.append(float(i[0]))
+date1 = '2016-09-05'
+mydates = pd.date_range(date1, periods=1840).tolist()
+fig = px.line(x = mydates, y = y, color_discrete_sequence=['#14213d'],
+              width=650, height=300,
+              labels = dict(x="Date", y="Predicted_price"))  # x:date; y:price
+fig.write_html("C:\\Users\\Jul\\PycharmProjects\\django-sites\\predictor_2.0\\prediction\\genie\\templates\\genie\\inc\\_ethforc_path.html",
+               full_html=False,
+               include_plotlyjs='cdn')
+# plt.plot(df3)
+# plt.show()
