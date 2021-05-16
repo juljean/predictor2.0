@@ -115,12 +115,10 @@ y_hat_inverse = scaler.inverse_transform(y_hat)
 
 print(len(test_data))
 x_input = test_data[81:].reshape(1, -1)
-print(x_input.shape)
 
 temp_input=list(x_input)
 temp_input=temp_input[0].tolist()
-#print(temp_input)
-print(len(temp_input))
+#print(len(temp_input))
 lst_output = []
 n_steps = 99
 i = 0
@@ -158,7 +156,7 @@ while (i < 30):
 
 df3=scaled_close.tolist()
 df3.extend(lst_output)
-print(len(df3))
+#print(len(df3))
 df3=scaler.inverse_transform(df3).tolist()
 y = []
 for i in df3:
@@ -166,7 +164,7 @@ for i in df3:
 date1 = '2016-09-05'
 mydates = pd.date_range(date1, periods=1840).tolist()
 fig = px.line(x = mydates, y = y, color_discrete_sequence=['#14213d'],
-              width=650, height=300,
+              width=1400, height=435,
               labels = dict(x="Date", y="Predicted_price"))  # x:date; y:price
 fig.write_html("C:\\Users\\Jul\\PycharmProjects\\django-sites\\predictor_2.0\\prediction\\genie\\templates\\genie\\inc\\_ethforc_path.html",
                full_html=False,
