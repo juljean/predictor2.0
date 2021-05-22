@@ -1,16 +1,34 @@
 from django.db import models
-import datetime
-from django.utils import timezone
+from genie.auto_update import df_records
 
+# Abstract class for all coins
 
 class CryptBD(models.Model):
-    date = models.CharField(max_length=15)
+    date = models.CharField(max_length=10)
     close = models.DecimalField(max_digits=20, decimal_places=2)
-    volume_BT = models.DecimalField(max_digits=20, decimal_places=2)
-    volume_USD = models.DecimalField(max_digits=20, decimal_places=2)
 
+    class Meta:
+        abstract = True
+
+# Bitcoin model
+
+class BtcBD(CryptBD):
     def __str__(self):
         return str(self.date)
 
-    def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+# Ethereum model
+
+class EthBD(CryptBD):
+    def __str__(self):
+        return str(self.date)
+
+
+# For the data-uploading(
+
+# model_instances = [BtcBD(
+#     date=record[('Date', 'BTC-USD')],
+#     close=record[('Close', 'BTC-USD')],
+# ) for record in df_records]
+# BtcBD.objects.bulk_create(model_instances)
+
+

@@ -1,7 +1,7 @@
 import sys
 import plotly.express as px
 import pandas as pd
-from .models import CryptBD
+from genie.models import BtcBD
 
 class UserInput:
     state = True # the input-field doesn`t blocked
@@ -33,16 +33,7 @@ class UserInput:
 
 class Data:
     def __init__(self):
-        self.df = pd.DataFrame(list(CryptBD.objects.values('date', 'close')))
-        for i in range(len(self.df['date'])):
-            old_val = self.df._get_value(i, 'date')
-            dash1 = old_val.find("/")
-            dash2 = old_val.find("/", dash1+1)
-            month = old_val[:dash1]
-            day = old_val[int(dash1)+1: dash2]
-            new_val = old_val[-4:] + "-" + month + "-" + day
-            self.df['date'] = self.df['date'].replace([old_val], new_val)
-        #print(self.df)
+        self.df = pd.DataFrame(list(BtcBD.objects.values('date', 'close')))
 
     def getDataRange(self):
         return self.df
@@ -55,7 +46,7 @@ class Plot:
     def draw(self):
         #df = pd.read_csv("C:\\Users\\Jul\\Desktop\\BTC__USD.csv")
         data_inst = Data()
-        df = data_inst.df[::-1]
+        df = data_inst.df
         start_ind = data_inst.df.index[df['date'] == self.raw_start].tolist()[0]
         end_ind = data_inst.df.index[df['date'] == self.raw_end].tolist()[0]
         print(start_ind, end_ind)
