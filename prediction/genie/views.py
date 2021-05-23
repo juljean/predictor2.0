@@ -1,28 +1,33 @@
 from django.shortcuts import render
-import requests
-from django.http import HttpResponse
-from .models import BtcBD
-from .plot import *
-import sys
-from subprocess import run, PIPE
+from django.views.generic import TemplateView
+from genie.forms import IndexForm
+from genie.models import BtcBD
 
-def data():
-    table_data = list(BtcBD.objects.all())
-    table_data = table_data[-7::]
-    return {'data_val': table_data}
+from .plot import Plot, Data
 
-def index(request):
-    start_date = request.POST.get("start_dat")
-    end_date = request.POST.get("end_dat")
-    #data = CryptBD.objects.all()[:7]
-    return render(request, 'genie/index.html', data())
+class IndexView(TemplateView):
+    template_name = 'genie/index.html'
 
-def external(request):
-    start_date = request.POST.get("start_dat")
-    end_date = request.POST.get("end_dat")
-    if start_date == None:
-        start_date = "2016-11-22"
-    if end_date == None: end_date = "2019-03-03"
-    plot_inst = Plot(start_date, end_date)
-    plot_inst.draw()
-    return render(request, 'genie/index.html', data())
+    def get(self, request):
+        form = IndexForm()
+        table_data = Data().getDataRange()[-7::]
+        print(table_data)
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        form = IndexForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+
+            Plot(start_date, end_date).draw()
+
+            # Clean screen for form
+            form = IndexForm()
+        args = {'form': form}
+        return render(request, self.template_name, args)
+
+    # def data(self, request):
+    #     table_data = Data().getDataRange()[-7::]
+    #     print(table_data)
+    #     return render(request, self.template_name, {'data_val': table_data})

@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import *
 
+
 urlpatterns = [
-    path('', index),
-    path('external', external, name="script")
+    path('', IndexView.as_view()),
 ]

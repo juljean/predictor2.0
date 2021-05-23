@@ -45,11 +45,13 @@ class Plot:
         self.raw_end = raw_end
     def draw(self):
         #df = pd.read_csv("C:\\Users\\Jul\\Desktop\\BTC__USD.csv")
-        data_inst = Data()
-        df = data_inst.df
-        start_ind = data_inst.df.index[df['date'] == self.raw_start].tolist()[0]
-        end_ind = data_inst.df.index[df['date'] == self.raw_end].tolist()[0]
+        df = Data().df
+
+        start_ind = df.index[df['date'] == str(self.raw_start)].tolist()[0]
+        end_ind = df.index[df['date'] == str(self.raw_end)].tolist()[0]
+
         print(start_ind, end_ind)
+
         fig = px.line(df.iloc[start_ind:end_ind], x='date', y='close', color_discrete_sequence=['#14213d']) #x:date; y:price
         fig.update_layout(
             font_family="Droid Sans",
