@@ -24,9 +24,9 @@
     <div class = "menu-line">
       <form method = "post">
         {% csrf_token %}
-        <input type="text" size="8" name = "start_dat" required placeholder="Start Date">
+        <input type="date" size="8" name = "start_dat" min="2015-01-01" >
         {% csrf_token %}
-        <input type="text" size="8" name = "end_dat" placeholder="End Date">
+        <input type="date" size="8" name = "end_dat" min="2015-01-01">
         <div class="btn-group">
             <button class="btn btn-secondary btn-sm dropdown-toggle btn-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Coin
@@ -46,16 +46,14 @@
             <li><a class="dropdown-item" href="#">month</a></li>
           </ul>
         </div>
-
-        <div class="btn-group justify-content-md-end">
-            <button onclick="location.href='{% url 'script' %}'" class="btn btn-dark" type="submit">Build</button>
-        </div>
-      </form>
+    </form>
+    <div class="btn-group justify-content-md-end">
+        <button onclick="location.href='{% url 'script' %}'" class="btn btn-dark" type="submit">Build</button>
     </div>
-
+    </div>
+  </div>
         <! -- PLot by plotly -->
       {% include 'genie/inc/_plot_path.html' %}
-  </div>
 
 
   <div class = "prediction-container">

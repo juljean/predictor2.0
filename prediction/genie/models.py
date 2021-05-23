@@ -1,5 +1,4 @@
 from django.db import models
-from genie.auto_update import df_records
 
 # Abstract class for all coins
 

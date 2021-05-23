@@ -13,11 +13,13 @@ class LiveUpdate:
     def start_designation(self):
         start_dt = self.data_read()[2]  # + 1 from the last one
         start = dt.datetime.strptime(start_dt, '%Y-%m-%d')
+        start += dt.timedelta(days=2)
         return start
 
     # Check if we need to update it
     def validation(self):
         start = self.start_designation()
+        print(start.date())
         if dt.datetime.today().date() != start.date():
             self.scratch_data(start)
         else:

@@ -12,13 +12,16 @@ def data():
     return {'data_val': table_data}
 
 def index(request):
+    start_date = request.POST.get("start_dat")
+    end_date = request.POST.get("end_dat")
     #data = CryptBD.objects.all()[:7]
     return render(request, 'genie/index.html', data())
 
 def external(request):
     start_date = request.POST.get("start_dat")
     end_date = request.POST.get("end_dat")
-    if start_date == None: start_date = "2016-11-22"
+    if start_date == None:
+        start_date = "2016-11-22"
     if end_date == None: end_date = "2019-03-03"
     plot_inst = Plot(start_date, end_date)
     plot_inst.draw()
